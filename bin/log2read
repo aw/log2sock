@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+
+require 'log2sock'
+
+socketfile = !ARGV.empty? ? ARGV[0] : Log2sock::DEFAULT_SOCKET
+
+begin
+  if File.exist?(socketfile)
+    puts "UNIX domain socket already exists, removing it first: #{socketfile}"
+    File.unlink(socketfile)
+  end
+  server = UNIXServer.new(socketfile)
+
+  %x[chmod 750 #{socketfile}]
+  puts "UNIX domain socket created at: #{socketfile}"
+  puts "========"
+  puts "Press Ctrl+C to terminate the reader"
+  puts "========"
+
+  loop {
+    Thread.start(server.accept) do |client|
+      while line = client.gets
+        puts line
+      end
+      client.close
+    end
+  }
+rescue Interrupt => e
+  puts "Terminating the reader and removing the socket"
+  File.unlink(socketfile)
+  exit
+end
