@@ -4,6 +4,10 @@ require 'log2sock'
 
 socketfile = !ARGV.empty? ? ARGV[0] : Log2sock::DEFAULT_SOCKET
 
+def colourize(line, code)
+  "\033[#{code}m#{line}\033[0m".delete("\n")
+end
+
 begin
   if File.exist?(socketfile)
     puts "UNIX domain socket already exists, removing it first: #{socketfile}"
@@ -20,7 +24,22 @@ begin
   loop {
     Thread.start(server.accept) do |client|
       while line = client.gets
-        puts line
+        case
+        when line.match(/DEBUG -- :/)
+          puts colourize(line, 30)
+        when line.match(/INFO -- :/)
+          puts colourize(line, 32)
+        when line.match(/WARN -- :/)
+          puts colourize(line, 36)
+        when line.match(/ERROR -- :/)
+          puts colourize(line, 31)
+        when line.match(/FATAL -- :/)
+          puts colourize(line, 35)
+        when line.match(/UNKNOWN -- :/)
+          puts colourize(line, 34)
+        else
+          puts line
+        end
       end
       client.close
     end
