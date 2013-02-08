@@ -2,6 +2,10 @@
 
 log2sock allows you to send logs to a UNIX domain socket. Its usage is similar to the Ruby 'logger' class, except with slightly less features.
 
+## Installation
+
+`gem install log2sock`
+
 ## Reading logs on a socket
 
 A small tool is included in this gem to help you read log messages on a UNIX domain socket.
