@@ -39,7 +39,7 @@ class Log2sock
     begin
       @socketfile = log2sockfile
       @socket = UNIXSocket.open(@socketfile)
-    rescue Exception => e
+    rescue SystemCallError => e
       set_socket_stdout(e)
     end
   end
@@ -78,8 +78,8 @@ class Log2sock
 
     begin
       @socket.puts "#{prefix} #{message}"
-    rescue Exception => e
-      # If the socket generates and exception, set the output
+    rescue SystemCallError => e
+      # If the socket generates an exception, set the output
       # to STDOUT for future calls to message()
       set_socket_stdout(e)
       @socket.puts "#{prefix} #{message}"

@@ -50,3 +50,7 @@ logger.debug { "This is something really stupid #{5/0}" } # lulz
 ## Requirements
 
 * Ruby 1.9.x or greater
+
+## LICENSE
+
+MIT License, see the LICENSE file
