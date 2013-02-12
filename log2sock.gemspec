@@ -5,7 +5,7 @@ require "base64"
 
 Gem::Specification.new do |s|
   s.name        = 'log2sock'
-  s.version     = '0.0.5'
+  s.version     = '0.0.6'
 
   s.date        = Date.today.to_s
 
