@@ -6,18 +6,29 @@ log2sock allows you to send logs to a UNIX domain socket. Its usage is similar t
 
 `gem install log2sock`
 
+# Usage
+
 ## Reading logs on a socket
 
 A small tool is included in this gem to help you read log messages on a UNIX domain socket.
 
-It's called `log2read`. It takes 1 argument which is the path/filename of the socket you want to create and listen on.
+```
+Usage: log2read [<OPTIONS>]
 
-Example:
+OPTIONS
+        --colour, --color            Default: no colour
+        --socket=<filename>          Default: /tmp/log2.sock
+        --help                       Display this help
+```
+
+### Example
 
 ```
 # Let's assume you're using RBENV
-~/.rbenv/shims/log2read /tmp/mylogs.sock
+~/.rbenv/shims/log2read --socket=/tmp/mylogs.sock --colour`
 ```
+
+This command creates a socket at `/tmp/mylogs.sock` and enables colourized log output.
 
 ## Writing logs to a socket
 
