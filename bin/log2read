@@ -1,8 +1,43 @@
 #!/usr/bin/env ruby
 
 require 'log2sock'
+require 'optparse'
 
-socketfile = !ARGV.empty? ? ARGV[0] : Log2sock::DEFAULT_SOCKET
+@options = {
+  :colour => false,
+  :socket => Log2sock::DEFAULT_SOCKET
+}
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: #{File.basename($0)} [<OPTIONS>]"
+  opts.separator ""
+  opts.separator "OPTIONS"
+  opts.on("--colour", "--color", "(optional) Default: no colour") do |c|
+    @options[:colour] = c
+  end
+  opts.on("--socket=<filename>", "(optional) Default: #{Log2sock::DEFAULT_SOCKET}") do |s|
+    @options[:socket] = s
+  end
+  opts.on_tail("--help", "Display this help") do
+    puts opts
+    exit 2
+  end
+
+  begin
+    opts.parse!
+  rescue OptionParser::InvalidOption, OptionParser::MissingArgument, OptionParser::InvalidArgument
+    puts $!.to_s
+    puts opts
+    exit 2
+  end
+
+end
+
+socketfile = @options[:socket]
+
+def colourize(line, code)
+  "\033[#{code}m#{line}\033[0m".delete("\n")
+end
 
 begin
   if File.exist?(socketfile)
@@ -20,7 +55,26 @@ begin
   loop {
     Thread.start(server.accept) do |client|
       while line = client.gets
-        puts line
+        if @options[:colour] == false
+          puts line
+        else
+          case
+          when line.match(/DEBUG -- :/)
+            puts colourize(line, 0)
+          when line.match(/INFO -- :/)
+            puts colourize(line, 32)
+          when line.match(/WARN -- :/)
+            puts colourize(line, 36)
+          when line.match(/ERROR -- :/)
+            puts colourize(line, 31)
+          when line.match(/FATAL -- :/)
+            puts colourize(line, 35)
+          when line.match(/UNKNOWN -- :/)
+            puts colourize(line, 34)
+          else
+            puts line
+          end
+        end
       end
       client.close
     end
