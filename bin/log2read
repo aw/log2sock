@@ -60,7 +60,7 @@ begin
         else
           case
           when line.match(/DEBUG -- :/)
-            puts colourize(line, 30)
+            puts colourize(line, 0)
           when line.match(/INFO -- :/)
             puts colourize(line, 32)
           when line.match(/WARN -- :/)
