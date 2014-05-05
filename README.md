@@ -1,3 +1,7 @@
+# DEPRECATED
+
+This tool isn't used or maintained anymore. Please fork if you want to make your own improvements.
+
 # log2sock
 
 log2sock allows you to send logs to a UNIX domain socket. Its usage is similar to the Ruby 'logger' class, except with slightly less features.
